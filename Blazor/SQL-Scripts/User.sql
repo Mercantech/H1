@@ -1,5 +1,24 @@
 -- PostgresSQL User Table
 
+-- Opret roles tabel i stedet for enum
+CREATE TABLE IF NOT EXISTS "Role" (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    description TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tilføj standard roller
+INSERT INTO "Role" (name, description) VALUES
+    ('User', 'Standard bruger med basis rettigheder'),
+    ('Admin', 'Administrator med udvidede rettigheder'),
+    ('Dev', 'Udvikler med fulde system rettigheder')
+ON CONFLICT (name) DO NOTHING;
+
+-- Tilføj kommentar
+COMMENT ON TABLE "Role" IS 'Tabel der indeholder system roller';
+
 CREATE TABLE IF NOT EXISTS "User" (
     id VARCHAR(255) PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -47,24 +66,7 @@ COMMENT ON COLUMN "User".first_name IS 'Brugerens fornavn';
 COMMENT ON COLUMN "User".last_name IS 'Brugerens efternavn';
 COMMENT ON COLUMN "User".role_id IS 'Reference til brugerens rolle';
 
--- Opret roles tabel i stedet for enum
-CREATE TABLE IF NOT EXISTS "Role" (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE,
-    description TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
 
--- Tilføj standard roller
-INSERT INTO "Role" (name, description) VALUES
-    ('User', 'Standard bruger med basis rettigheder'),
-    ('Admin', 'Administrator med udvidede rettigheder'),
-    ('Dev', 'Udvikler med fulde system rettigheder')
-ON CONFLICT (name) DO NOTHING;
-
--- Tilføj kommentar
-COMMENT ON TABLE "Role" IS 'Tabel der indeholder system roller';
 
 -- Tilføj 3 standard brugere til test, en for hver rolle
 INSERT INTO "User" (id, username, email, password_hash, role_id) VALUES
