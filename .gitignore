@@ -1,0 +1,54 @@
+# =============================================================================
+# Hvad er en .gitignore?
+# =============================================================================
+# Git husker (tracker) filer i dit projekt. En .gitignore-fil fortæller Git,
+# hvilke filer og mapper der IKKE skal versionsstyres.
+#
+# Det er vigtigt, fordi mange filer:
+#   - genereres automatisk (fx bin/ og obj/ når du bygger)
+#   - er personlige (fx dine lokale IDE-indstillinger)
+#   - kan indeholde hemmeligheder (fx .env med passwords)
+#
+# Regel: Hvis filen kan genskabes, eller kun gælder for dig — ignorer den.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# .NET build-output
+# -----------------------------------------------------------------------------
+# Når du kører "dotnet build", lægger SDK'et kompilerede filer her.
+# De skabes igen ved næste build — derfor skal de ikke i Git.
+bin/
+obj/
+
+# -----------------------------------------------------------------------------
+# Bruger- og IDE-indstillinger
+# -----------------------------------------------------------------------------
+# Personlige Visual Studio / Rider / VS Code-indstillinger.
+# De er forskellige fra elev til elev og hører ikke til i det fælles repo.
+.vs/
+.idea/
+*.user
+*.suo
+
+# -----------------------------------------------------------------------------
+# Hemmeligheder og lokale miljøvariabler
+# -----------------------------------------------------------------------------
+# .env bruges ofte til passwords og API-nøgler i Docker/Dokploy.
+# .env.example (hvis I laver en) MÅ gerne committes — den har ingen rigtige secrets.
+.env
+.env.*
+!.env.example
+appsettings.json
+
+# -----------------------------------------------------------------------------
+# Aspire / lokal udviklingsdata
+# -----------------------------------------------------------------------------
+# Aspire kan gemme lokal runtime-state her. Det er maskinspecifikt.
+.aspire/
+
+# -----------------------------------------------------------------------------
+# OS-filer
+# -----------------------------------------------------------------------------
+# Windows laver automatisk denne fil i mapper. Den er ikke en del af projektet.
+Thumbs.db
+Desktop.ini
