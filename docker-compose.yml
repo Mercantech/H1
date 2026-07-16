@@ -3,13 +3,7 @@
 # Routing (samme mønster som øvrige Mercantec-apps):
 #   1. Cloudflare: *.mercantec.tech (wildcard CNAME → tunnel)
 #   2. Tunnel ingress: *.mercantec.tech → http://localhost:80
-#   3. Traefik (Dokploy): Host(`h1.mercantec.tech`) → web:8080
-#
-# Vigtigt: Hvis https://h1.mercantec.tech/ redirecter til /dashboard,
-# svarer Traefiks eget kontrolpanel for domænet (ikke Blazor).
-# Tjek i Traefik → HTTP Routers at Host(`h1.mercantec.tech`) peger på
-# service "h1-web" — ikke api@internal.
-# Brug KUN compose-labels ELLER Dokploy Domains (ikke begge i konflikt).
+#   3. Traefik (Dokploy): Host(`h1-t.mercantec.tech`) → web:8080
 services:
   postgres:
     image: postgres:17-alpine
@@ -52,17 +46,12 @@ services:
       - internal
       - dokploy-network
     labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=dokploy-network"
-      # Høj prioritet så Host-reglen vinder over Traefik dashboard/api-routere
-      - "traefik.http.routers.h1-web.rule=Host(`${APP_DOMAIN:-h1.mercantec.tech}`)"
-      - "traefik.http.routers.h1-web.entrypoints=web"
-      - "traefik.http.routers.h1-web.priority=1000"
-      - "traefik.http.routers.h1-web.service=h1-web"
-      - "traefik.http.services.h1-web.loadbalancer.server.port=8080"
-      # Blazor Server bruger WebSockets/SignalR — sticky session hjælper bag load balancer
-      - "traefik.http.services.h1-web.loadbalancer.sticky.cookie=true"
-      - "traefik.http.services.h1-web.loadbalancer.sticky.cookie.name=h1_sticky"
+      - traefik.enable=true
+      - traefik.docker.network=dokploy-network
+      - traefik.http.routers.h1t-web.rule=Host(`${APP_DOMAIN:-h1-t.mercantec.tech}`)
+      - traefik.http.routers.h1t-web.entrypoints=web
+      - traefik.http.routers.h1t-web.service=h1t-web
+      - traefik.http.services.h1t-web.loadbalancer.server.port=8080
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 15s
