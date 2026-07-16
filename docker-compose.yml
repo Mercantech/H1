@@ -51,7 +51,7 @@ services:
       - traefik.http.routers.h1-web.rule=Host(`${APP_DOMAIN:-h1.mercantec.tech}`)
       - traefik.http.routers.h1-web.entrypoints=web
       - traefik.http.routers.h1-web.service=h1-web
-      - traefik.http.services.h1-web.loadbalancer.server.port=8080
+      - traefik.http.services.h1-web.loadbalancer.server.port=80
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 15s
