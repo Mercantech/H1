@@ -1,0 +1,284 @@
+/* H1 landing — nordisk værksted: ink, mist, citrus */
+:root {
+    --h1-ink: #142033;
+    --h1-ink-soft: #2a3a52;
+    --h1-mist: #e7eef5;
+    --h1-paper: #f5f8fb;
+    --h1-accent: #f0a202;
+    --h1-accent-deep: #d48900;
+    --h1-line: rgba(20, 32, 51, 0.12);
+    --h1-font-display: "Syne", sans-serif;
+    --h1-font-body: "Manrope", sans-serif;
+}
+
+/* ----- Hero: ét full-bleed viewport ----- */
+.hero {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: grid;
+    align-items: end;
+    overflow: hidden;
+    color: var(--h1-paper);
+}
+
+.hero__media {
+    position: absolute;
+    inset: 0;
+    background:
+        url("https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=2400&q=80")
+        center / cover no-repeat;
+    transform: scale(1.06);
+    animation: hero-drift 18s ease-in-out infinite alternate;
+}
+
+.hero__veil {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(
+            115deg,
+            rgba(20, 32, 51, 0.92) 0%,
+            rgba(20, 32, 51, 0.72) 42%,
+            rgba(20, 32, 51, 0.35) 100%
+        ),
+        radial-gradient(ellipse at 20% 80%, rgba(240, 162, 2, 0.18), transparent 50%);
+}
+
+.hero__content {
+    position: relative;
+    z-index: 1;
+    width: min(44rem, calc(100% - 2.5rem));
+    margin: 0 0 clamp(3rem, 8vh, 5.5rem) clamp(1.25rem, 5vw, 4.5rem);
+    animation: rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero__brand {
+    margin: 0 0 0.35rem;
+    font-family: var(--h1-font-display);
+    font-weight: 800;
+    font-size: clamp(4.5rem, 16vw, 9.5rem);
+    line-height: 0.85;
+    letter-spacing: -0.06em;
+    color: var(--h1-accent);
+    animation: rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+
+.hero__headline {
+    margin: 0 0 0.85rem;
+    font-family: var(--h1-font-display);
+    font-weight: 700;
+    font-size: clamp(1.55rem, 3.6vw, 2.35rem);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    max-width: 18ch;
+    animation: rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.16s both;
+}
+
+.hero__lede {
+    margin: 0 0 1.75rem;
+    font-family: var(--h1-font-body);
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    line-height: 1.55;
+    max-width: 34ch;
+    color: rgba(245, 248, 251, 0.86);
+    animation: rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.24s both;
+}
+
+.hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem 1rem;
+    animation: rise-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.32s both;
+}
+
+.btn-solid,
+.btn-line {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.85rem;
+    padding: 0.65rem 1.35rem;
+    font-family: var(--h1-font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    border-radius: 0.2rem;
+    transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.btn-solid {
+    background: var(--h1-accent);
+    color: var(--h1-ink);
+    border: 1px solid var(--h1-accent);
+}
+
+.btn-solid:hover {
+    background: #ffb521;
+    border-color: #ffb521;
+    color: var(--h1-ink);
+    transform: translateY(-2px);
+}
+
+.btn-line {
+    background: transparent;
+    color: var(--h1-paper);
+    border: 1px solid rgba(245, 248, 251, 0.45);
+}
+
+.btn-line:hover {
+    border-color: var(--h1-paper);
+    color: var(--h1-paper);
+    transform: translateY(-2px);
+}
+
+/* ----- Én sektion, ét formål ----- */
+.stack {
+    background:
+        linear-gradient(180deg, var(--h1-mist) 0%, var(--h1-paper) 100%);
+    color: var(--h1-ink);
+    padding: clamp(3.5rem, 10vh, 6.5rem) clamp(1.25rem, 5vw, 4.5rem);
+}
+
+.stack__inner {
+    width: min(52rem, 100%);
+    animation: rise-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+}
+
+.stack__title {
+    margin: 0 0 0.65rem;
+    font-family: var(--h1-font-display);
+    font-weight: 700;
+    font-size: clamp(1.75rem, 4vw, 2.6rem);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.stack__lede {
+    margin: 0 0 2.5rem;
+    font-family: var(--h1-font-body);
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: var(--h1-ink-soft);
+    max-width: 38ch;
+}
+
+.stack__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--h1-line);
+}
+
+.stack__list li {
+    display: grid;
+    grid-template-columns: minmax(8rem, 12rem) 1fr;
+    gap: 0.75rem 1.5rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--h1-line);
+    font-family: var(--h1-font-body);
+}
+
+.stack__name {
+    font-family: var(--h1-font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+}
+
+.stack__desc {
+    color: var(--h1-ink-soft);
+    line-height: 1.5;
+}
+
+.stack__next {
+    margin: 2.25rem 0 0;
+    font-family: var(--h1-font-body);
+    font-size: 0.95rem;
+}
+
+.stack__next a {
+    color: var(--h1-ink);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 2px solid var(--h1-accent);
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.stack__next a:hover {
+    color: var(--h1-accent-deep);
+    border-color: var(--h1-accent-deep);
+}
+
+.site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    padding: 1.35rem clamp(1.25rem, 5vw, 4.5rem);
+    background: var(--h1-ink);
+    color: rgba(245, 248, 251, 0.72);
+    font-family: var(--h1-font-body);
+    font-size: 0.9rem;
+}
+
+.site-footer__brand {
+    font-family: var(--h1-font-display);
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: -0.04em;
+    color: var(--h1-accent);
+}
+
+@keyframes rise-in {
+    from {
+        opacity: 0;
+        transform: translateY(1.1rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes hero-drift {
+    from {
+        transform: scale(1.06) translate3d(0, 0, 0);
+    }
+    to {
+        transform: scale(1.12) translate3d(-1.5%, -1%, 0);
+    }
+}
+
+@media (max-width: 640px) {
+    .hero__content {
+        margin-left: 1.25rem;
+        margin-right: 1.25rem;
+        width: auto;
+    }
+
+    .stack__list li {
+        grid-template-columns: 1fr;
+        gap: 0.25rem;
+    }
+
+    .btn-solid,
+    .btn-line {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero__media,
+    .hero__content,
+    .hero__brand,
+    .hero__headline,
+    .hero__lede,
+    .hero__actions,
+    .stack__inner {
+        animation: none !important;
+        transform: none !important;
+    }
+}

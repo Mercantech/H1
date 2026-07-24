@@ -1,7 +1,56 @@
 ﻿@page "/"
+@layout Layout.LandingLayout
 
-<PageTitle>Home</PageTitle>
+<PageTitle>H1 — Dit .NET-forløb</PageTitle>
 
-<h1>Hello, world!</h1>
+<section class="hero">
+    <div class="hero__media" role="img" aria-label="Arbejdsbord med laptop og kode"></div>
+    <div class="hero__veil"></div>
 
-Welcome to your new app.
+    <div class="hero__content">
+        <p class="hero__brand">H1</p>
+        <h1 class="hero__headline">Dit .NET-forløb starter her</h1>
+        <p class="hero__lede">
+            Blazor Server med Aspire og Postgres — templateen I bygger videre på hos Mercantec.
+        </p>
+        <div class="hero__actions">
+            <a class="btn-solid" href="#stack">Kom i gang</a>
+            <a class="btn-line" href="counter">Prøv Counter</a>
+        </div>
+    </div>
+</section>
+
+<section id="stack" class="stack">
+    <div class="stack__inner">
+        <h2 class="stack__title">Stacken I arbejder med</h2>
+        <p class="stack__lede">
+            Alt er sat op, så I kan fokusere på at lære, eksperimentere og bygge.
+        </p>
+
+        <ul class="stack__list">
+            <li>
+                <span class="stack__name">Blazor Server</span>
+                <span class="stack__desc">Interaktiv UI med C# direkte på serveren.</span>
+            </li>
+            <li>
+                <span class="stack__name">.NET Aspire</span>
+                <span class="stack__desc">Lokal orkestrering, health checks og service discovery.</span>
+            </li>
+            <li>
+                <span class="stack__name">PostgreSQL</span>
+                <span class="stack__desc">Database klar i Aspire lokalt og i Docker til Dokploy.</span>
+            </li>
+        </ul>
+
+        <p class="stack__next">
+            <a href="weather">Se vejr-demoen</a>
+            <span aria-hidden="true"> · </span>
+            <a href="counter">Åbn Counter</a>
+        </p>
+    </div>
+</section>
+
+<footer class="site-footer">
+    <span class="site-footer__brand">H1</span>
+    <span class="site-footer__meta">Mercantec · Blazor Server template</span>
+</footer>

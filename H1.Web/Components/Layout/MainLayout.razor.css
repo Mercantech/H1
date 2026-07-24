@@ -2,6 +2,10 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+    background: var(--h1-paper, #f5f8fb);
+    color: var(--h1-ink, #142033);
+    font-family: var(--h1-font-body, "Manrope", sans-serif);
 }
 
 main {
@@ -9,40 +13,44 @@ main {
 }
 
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    background: var(--h1-ink, #142033);
 }
 
 .top-row {
-    background-color: #f7f7f7;
-    border-bottom: 1px solid #d6d5d5;
+    background-color: transparent;
+    border-bottom: 1px solid var(--h1-line, rgba(20, 32, 51, 0.12));
     justify-content: flex-end;
     height: 3.5rem;
     display: flex;
     align-items: center;
+    padding-inline: 1.25rem;
 }
 
-    .top-row ::deep a, .top-row ::deep .btn-link {
-        white-space: nowrap;
-        margin-left: 1.5rem;
-        text-decoration: none;
-    }
+.top-row ::deep a {
+    color: var(--h1-ink-soft, #2a3a52);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 2px solid var(--h1-accent, #f0a202);
+}
 
-    .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
-        text-decoration: underline;
-    }
+.top-row ::deep a:hover {
+    color: var(--h1-ink, #142033);
+}
 
-    .top-row ::deep a:first-child {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+.content {
+    padding: 1.5rem 1.25rem 2.5rem;
+}
+
+.content ::deep h1 {
+    font-family: var(--h1-font-display, "Syne", sans-serif);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+}
 
 @media (max-width: 640.98px) {
     .top-row {
         justify-content: space-between;
-    }
-
-    .top-row ::deep a, .top-row ::deep .btn-link {
-        margin-left: 0;
     }
 }
 
@@ -52,7 +60,7 @@ main {
     }
 
     .sidebar {
-        width: 250px;
+        width: 15.5rem;
         height: 100vh;
         position: sticky;
         top: 0;
@@ -62,35 +70,32 @@ main {
         position: sticky;
         top: 0;
         z-index: 1;
+        background: rgba(245, 248, 251, 0.92);
+        backdrop-filter: blur(8px);
     }
 
-    .top-row.auth ::deep a:first-child {
-        flex: 1;
-        text-align: right;
-        width: 0;
-    }
-
-    .top-row, article {
-        padding-left: 2rem !important;
-        padding-right: 1.5rem !important;
+    .content {
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
 }
 
 #blazor-error-ui {
-    background: lightyellow;
+    background: var(--h1-ink, #142033);
+    color: #f5f8fb;
     bottom: 0;
-    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
     display: none;
     left: 0;
-    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    padding: 0.7rem 1.25rem;
     position: fixed;
     width: 100%;
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.55rem;
+}
