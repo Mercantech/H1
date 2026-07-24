@@ -3,7 +3,9 @@
 # Routing (samme mønster som øvrige Mercantec-apps):
 #   1. Cloudflare: *.mercantec.tech (wildcard CNAME → tunnel)
 #   2. Tunnel ingress: *.mercantec.tech → http://localhost:80
-#   3. Traefik (Dokploy): Host(`h1-t.mercantec.tech`) → web:8080
+#   3. Traefik (Dokploy):
+#        Host(`h1-t.mercantec.tech`)  → web:8080
+#        Host(`h1-db.mercantec.tech`) → pgweb:8081
 services:
   postgres:
     image: postgres:17-alpine
@@ -22,6 +24,30 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+
+  pgweb:
+    image: sosedoff/pgweb:latest
+    restart: unless-stopped
+    environment:
+      # Automatisk forbindelse til postgres i samme compose-netværk
+      PGWEB_DATABASE_URL: postgres://${POSTGRES_USER:-h1}:${POSTGRES_PASSWORD:-h1}@postgres:5432/${POSTGRES_DB:-h1db}?sslmode=disable
+      PGWEB_LOCK_SESSION: "1"
+      # Valgfri basic auth (anbefales i produktion) — sæt via Dokploy/Infisical
+      PGWEB_AUTH_USER: ${PGWEB_AUTH_USER:-}
+      PGWEB_AUTH_PASS: ${PGWEB_AUTH_PASS:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - internal
+      - dokploy-network
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=dokploy-network
+      - traefik.http.routers.h1t-pgweb.rule=Host(`${PGWEB_DOMAIN:-h1-db.mercantec.tech}`)
+      - traefik.http.routers.h1t-pgweb.entrypoints=web
+      - traefik.http.routers.h1t-pgweb.service=h1t-pgweb
+      - traefik.http.services.h1t-pgweb.loadbalancer.server.port=8081
 
   web:
     build:
