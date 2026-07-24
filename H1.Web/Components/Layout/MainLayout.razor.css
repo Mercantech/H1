@@ -13,6 +13,7 @@ main {
 }
 
 .sidebar {
+    position: relative;
     background: var(--h1-ink, #142033);
 }
 

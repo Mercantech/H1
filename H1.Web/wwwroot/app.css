@@ -80,3 +80,15 @@ h1:focus {
 .table {
     font-family: var(--h1-font-body);
 }
+
+/* Nav toggle uden CSS-isolation (Blazor :checked + attribute-scope er upålideligt) */
+@media (max-width: 640.98px) {
+    .nav-menu .nav-scrollable {
+        display: none;
+    }
+
+    .nav-menu .navbar-toggler:checked ~ .nav-scrollable {
+        display: block;
+    }
+}
+

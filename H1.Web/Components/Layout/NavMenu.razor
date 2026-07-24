@@ -1,13 +1,15 @@
-﻿<div class="nav-brand">
-    <a class="nav-brand__link" href="">H1</a>
-</div>
+﻿<div class="nav-menu">
+    <div class="nav-brand">
+        <a class="nav-brand__link" href="">H1</a>
+    </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+    <input type="checkbox" title="Navigation menu" class="navbar-toggler" id="nav-toggle" />
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="nav-list">
-        <NavLink class="nav-list__link" href="" Match="NavLinkMatch.All">Forside</NavLink>
-        <NavLink class="nav-list__link" href="counter">Counter</NavLink>
-        <NavLink class="nav-list__link" href="weather">Weather</NavLink>
-    </nav>
+    <div class="nav-scrollable">
+        <nav class="nav-list">
+            <NavLink class="nav-list__link" href="" Match="NavLinkMatch.All">Forside</NavLink>
+            <NavLink class="nav-list__link" href="counter">Counter</NavLink>
+            <NavLink class="nav-list__link" href="weather">Weather</NavLink>
+        </nav>
+    </div>
 </div>
