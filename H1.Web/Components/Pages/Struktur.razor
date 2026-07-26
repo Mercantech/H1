@@ -1,0 +1,262 @@
+@page "/struktur"
+
+<PageTitle>Filstruktur &amp; Aspire</PageTitle>
+
+<article class="learn">
+    <header class="learn__header">
+        <p class="learn__eyebrow">Projektet</p>
+        <h1 class="learn__title">Filstruktur &amp; Aspire</h1>
+        <p class="learn__lede">
+            H1 er delt op i få projekter med klare roller. Aspire er limen,
+            der starter det hele lokalt — inklusive Postgres.
+        </p>
+    </header>
+
+    <section class="learn__section">
+        <h2>Hvorfor flere projekter?</h2>
+        <p>
+            I stedet for én stor mappe har vi en <strong>solution</strong>
+            (<code>H1.sln</code>) med flere projekter. Det minder om virkelige
+            .NET-apps: ét sted til orkestrering, ét til fælles kode, ét til UI.
+        </p>
+    </section>
+
+    <section class="learn__section">
+        <h2>Overblik over mappen</h2>
+        <pre class="learn__tree">@TreeOverview</pre>
+        <ul class="learn__defs">
+            <li>
+                <code>H1.AppHost</code>
+                <span>Aspire-starten. Her definerer I Postgres, database og web-appen.</span>
+            </li>
+            <li>
+                <code>H1.Web</code>
+                <span>Blazor Server — sider, layout, CSS og <code>Program.cs</code>.</span>
+            </li>
+            <li>
+                <code>H1.ServiceDefaults</code>
+                <span>Fælles Aspire-setup: health checks, telemetry, service discovery.</span>
+            </li>
+            <li>
+                <code>Docker/</code> + <code>docker-compose.yml</code>
+                <span>Produktion på Dokploy (web, Postgres, pgweb) — uden AppHost.</span>
+            </li>
+        </ul>
+    </section>
+
+    <section class="learn__section">
+        <h2>Inde i H1.Web</h2>
+        <p>
+            Det er her I typisk arbejder til daglig:
+        </p>
+        <ul class="learn__defs">
+            <li>
+                <code>Program.cs</code>
+                <span>Starter appen, tilføjer Blazor, Postgres (<code>h1db</code>) og Aspire-defaults.</span>
+            </li>
+            <li>
+                <code>Components/Pages/</code>
+                <span>Jeres sider — fx <code>Home.razor</code>, <code>Dapper.razor</code>, <code>Weather.razor</code>.</span>
+            </li>
+            <li>
+                <code>Components/Layout/</code>
+                <span>Layouts og menu (<code>MainLayout</code>, <code>LandingLayout</code>, <code>NavMenu</code>).</span>
+            </li>
+            <li>
+                <code>wwwroot/</code>
+                <span>Statiske filer: CSS, favicon, evt. billeder.</span>
+            </li>
+            <li>
+                <code>appsettings.json</code>
+                <span>Konfiguration. Connection strings kommer ofte fra Aspire eller Docker i stedet.</span>
+            </li>
+        </ul>
+    </section>
+
+    <section class="learn__section">
+        <h2>Hvad er Aspire?</h2>
+        <p>
+            <strong>.NET Aspire</strong> er et værktøj til at køre cloud-klare apps
+            <em>lokalt</em> med mindst muligt besvær. I stedet for at starte
+            Postgres, web og dashboard hver for sig, kører I ét projekt:
+            <code>H1.AppHost</code>.
+        </p>
+        <p>
+            Aspire giver jer blandt andet:
+        </p>
+        <ol class="learn__steps">
+            <li>Et dashboard med links, logs og status.</li>
+            <li>Automatisk Postgres (container) + connection string til web.</li>
+            <li>Health checks, så tjenester venter på hinanden.</li>
+            <li>Service discovery — tjenester finder hinanden på navn.</li>
+        </ol>
+    </section>
+
+    <section class="learn__section">
+        <h2>AppHost — dirigenten</h2>
+        <p>
+            <code>AppHost.cs</code> beskriver <em>hvad</em> der skal køre:
+        </p>
+        <pre class="learn__code"><code>@AppHostSample</code></pre>
+        <ul class="learn__bullets">
+            <li><code>AddPostgres</code> — starter en Postgres-container.</li>
+            <li><code>AddDatabase("h1db")</code> — opretter/peger på databasen <code>h1db</code>.</li>
+            <li><code>WithReference(h1db)</code> — giver web-appen connection string.</li>
+            <li><code>WaitFor(h1db)</code> — web venter, til databasen er klar.</li>
+            <li><code>WithPgAdmin</code> — valgfri UI til databasen under udvikling.</li>
+        </ul>
+    </section>
+
+    <section class="learn__section">
+        <h2>Sådan hænger det sammen</h2>
+        <ol class="learn__flow">
+            <li>
+                <span class="learn__flow-num">1</span>
+                <div>
+                    <strong>I starter AppHost</strong>
+                    <span><code>dotnet run --project H1.AppHost</code></span>
+                </div>
+            </li>
+            <li>
+                <span class="learn__flow-num">2</span>
+                <div>
+                    <strong>Aspire starter Postgres</strong>
+                    <span>Container + database <code>h1db</code> (og evt. pgAdmin).</span>
+                </div>
+            </li>
+            <li>
+                <span class="learn__flow-num">3</span>
+                <div>
+                    <strong>H1.Web får fat i databasen</strong>
+                    <span><code>Program.cs</code> kalder <code>AddNpgsqlDataSource("h1db")</code> — navnet matcher AppHost.</span>
+                </div>
+            </li>
+            <li>
+                <span class="learn__flow-num">4</span>
+                <div>
+                    <strong>ServiceDefaults ligger under motorhjelmen</strong>
+                    <span><code>AddServiceDefaults()</code> tilføjer health, logs/telemetry og resilience.</span>
+                </div>
+            </li>
+        </ol>
+    </section>
+
+    <section class="learn__section">
+        <h2>Lokalt vs. Dokploy</h2>
+        <div class="learn__table-wrap">
+            <table class="learn__table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Lokalt (Aspire)</th>
+                        <th>Dokploy (Docker)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Start</strong></td>
+                        <td><code>H1.AppHost</code></td>
+                        <td><code>docker compose up</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Postgres</strong></td>
+                        <td>Aspire-container</td>
+                        <td>Service i compose</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Web</strong></td>
+                        <td><code>H1.Web</code> via Aspire</td>
+                        <td>Build via <code>Dockerfile.web</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>DB-UI</strong></td>
+                        <td>pgAdmin (Aspire)</td>
+                        <td>pgweb på <code>h1-db.mercantec.tech</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>AppHost</strong></td>
+                        <td>Ja — det er entrypoint</td>
+                        <td>Nej — bruges ikke i produktion</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p>
+            Husk: Aspire er til udvikling. På serveren er det Docker Compose + Traefik,
+            der styrer routing til jeres domæner.
+        </p>
+    </section>
+
+    <section class="learn__section">
+        <h2>Hvad skal I typisk åbne?</h2>
+        <ul class="learn__defs">
+            <li>
+                <code>H1.AppHost/AppHost.cs</code>
+                <span>Når I tilføjer nye ressourcer (fx Redis — som vi bevidst ikke bruger her).</span>
+            </li>
+            <li>
+                <code>H1.Web/Components/Pages/</code>
+                <span>Når I laver nye sider eller ændrer UI.</span>
+            </li>
+            <li>
+                <code>H1.Web/Program.cs</code>
+                <span>Når I registrerer services (Dapper, auth, osv.).</span>
+            </li>
+            <li>
+                <code>docker-compose.yml</code>
+                <span>Når I ændrer produktion / Domains / pgweb.</span>
+            </li>
+        </ul>
+    </section>
+
+    <section class="learn__section learn__section--next">
+        <h2>Næste skridt</h2>
+        <p>
+            Kør AppHost, åbn Aspire-dashboardet, og klik ind på webfrontenden.
+            Prøv derefter at finde den side, I læser nu, i <code>Components/Pages</code>.
+        </p>
+        <p class="learn__next-links">
+            <a href="dapper">Læs om Dapper</a>
+            <span aria-hidden="true"> · </span>
+            <a href="weather">Vejr-demo</a>
+            <span aria-hidden="true"> · </span>
+            <a href="/">Til forsiden</a>
+        </p>
+    </section>
+</article>
+
+@code {
+    private const string TreeOverview =
+        """
+        H1/
+        ├── H1.sln                 ← solution (samler projekterne)
+        ├── H1.AppHost/            ← Aspire (start her lokalt)
+        │   └── AppHost.cs
+        ├── H1.ServiceDefaults/    ← fælles Aspire-hjælpere
+        │   └── Extensions.cs
+        ├── H1.Web/                ← Blazor Server-appen
+        │   ├── Program.cs
+        │   ├── Components/
+        │   │   ├── Pages/         ← jeres sider (.razor)
+        │   │   └── Layout/        ← menu & layouts
+        │   └── wwwroot/           ← CSS m.m.
+        ├── Docker/
+        │   └── Dockerfile.web
+        └── docker-compose.yml     ← Dokploy / produktion
+        """;
+
+    private const string AppHostSample =
+        """
+        var postgres = builder.AddPostgres("postgres")
+            .WithDataVolume()
+            .WithPgAdmin();
+
+        var h1db = postgres.AddDatabase("h1db");
+
+        builder.AddProject<Projects.H1_Web>("webfrontend")
+            .WithExternalHttpEndpoints()
+            .WithHttpHealthCheck("/health")
+            .WithReference(h1db)
+            .WaitFor(h1db);
+        """;
+}
