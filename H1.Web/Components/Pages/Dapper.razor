@@ -1,0 +1,231 @@
+@page "/dapper"
+
+<PageTitle>Hvad er Dapper?</PageTitle>
+
+<article class="learn">
+    <header class="learn__header">
+        <p class="learn__eyebrow">Data access i .NET</p>
+        <h1 class="learn__title">Hvad er Dapper?</h1>
+        <p class="learn__lede">
+            I kan allerede skrive SQL — Dapper hjælper jer med at få resultatet
+            ind i C#-objekter uden at I mister kontrollen over jeres queries.
+        </p>
+    </header>
+
+    <section class="learn__section">
+        <h2>Kort fortalt</h2>
+        <p>
+            <strong>Dapper</strong> er et lille bibliotek (en såkaldt <em>micro-ORM</em>)
+            fra Stack Overflow-teamet. Det sidder oven på den almindelige database-forbindelse
+            og gør to ting rigtig godt:
+        </p>
+        <ol class="learn__steps">
+            <li>I skriver SQL, som I plejer.</li>
+            <li>Dapper mapper rækkerne til C#-klasser automatisk.</li>
+        </ol>
+        <p>
+            I behøver ikke lære et nyt forespørgselssprog. <code>SELECT</code>,
+            <code>JOIN</code>, <code>GROUP BY</code> og subqueries virker stadig —
+            I limer dem bare sammen med C#.
+        </p>
+    </section>
+
+    <section class="learn__section">
+        <h2>Fra SQL-række til objekt</h2>
+        <p>
+            Forestil jer en tabel <code>elever</code>. I SQL får I kolonner.
+            I C# vil I helst have objekter:
+        </p>
+
+        <div class="learn__compare">
+            <div class="learn__pane">
+                <h3>SQL (det I kender)</h3>
+                <pre><code>@SqlSelect</code></pre>
+            </div>
+            <div class="learn__pane">
+                <h3>C# model</h3>
+                <pre><code>@CsharpModel</code></pre>
+            </div>
+        </div>
+
+        <p>
+            Dapper matcher kolonnenavne til properties (fx <code>navn</code> → <code>Navn</code>)
+            og returnerer en liste af <code>Elev</code>.
+        </p>
+    </section>
+
+    <section class="learn__section">
+        <h2>Sådan ser det ud med Dapper</h2>
+        <p>
+            I stedet for at læse hver kolonne manuelt med <code>reader.GetString(...)</code>,
+            kalder I en extension method på jeres connection:
+        </p>
+        <pre class="learn__code"><code>@DapperQuery</code></pre>
+        <ul class="learn__bullets">
+            <li><code>QueryAsync&lt;Elev&gt;</code> — kør SQL og få <code>IEnumerable&lt;Elev&gt;</code>.</li>
+            <li><code>@("@Hold")</code> — parameter (ikke tekst-sammensætning).</li>
+            <li><code>new { Hold = "H1" }</code> — anonymt objekt med værdier til parametrene.</li>
+        </ul>
+    </section>
+
+    <section class="learn__section">
+        <h2>Hvorfor parametre er vigtige</h2>
+        <p>
+            I har sikkert hørt om SQL injection. Hvis I bygger SQL sådan her, er det farligt:
+        </p>
+        <pre class="learn__code learn__code--bad"><code>@BadSql</code></pre>
+        <p>
+            Med Dapper (og parametre) sendes værdien separat til databasen.
+            Postgres behandler den som data — ikke som SQL-kode:
+        </p>
+        <pre class="learn__code learn__code--good"><code>@GoodSql</code></pre>
+    </section>
+
+    <section class="learn__section">
+        <h2>Jeres SQL-skills passer stadig</h2>
+        <p>
+            Dapper tvinger jer ikke til simple queries. Mere avanceret SQL er helt fint:
+        </p>
+        <pre class="learn__code"><code>@AdvancedSql</code></pre>
+        <p>
+            Pointen: <strong>I designer stadig SQL’en</strong>. Dapper sørger mest for mappingen
+            og for at parametrene håndteres sikkert.
+        </p>
+    </section>
+
+    <section class="learn__section">
+        <h2>Dapper vs. “bare ADO.NET” vs. Entity Framework</h2>
+        <div class="learn__table-wrap">
+            <table class="learn__table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>I skriver SQL</th>
+                        <th>Mapping</th>
+                        <th>Typisk brug</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>ADO.NET</strong></td>
+                        <td>Ja</td>
+                        <td>Manuelt</td>
+                        <td>Meget kontrol, meget boilerplate</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dapper</strong></td>
+                        <td>Ja</td>
+                        <td>Automatisk</td>
+                        <td>Når I vil styre SQL selv</td>
+                    </tr>
+                    <tr>
+                        <td><strong>EF Core</strong></td>
+                        <td>Sjældent</td>
+                        <td>Automatisk</td>
+                        <td>Når I tænker mere i C#-modeller end SQL</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p>
+            På H1 bruger vi Dapper, fordi I allerede kan SQL — og fordi det er
+            nemt at se præcis, hvad der sendes til Postgres.
+        </p>
+    </section>
+
+    <section class="learn__section">
+        <h2>De metoder I møder oftest</h2>
+        <ul class="learn__defs">
+            <li>
+                <code>Query&lt;T&gt;</code> / <code>QueryAsync&lt;T&gt;</code>
+                <span>Flere rækker → liste af objekter</span>
+            </li>
+            <li>
+                <code>QuerySingle&lt;T&gt;</code>
+                <span>Præcis én række (fejl hvis 0 eller flere)</span>
+            </li>
+            <li>
+                <code>QueryFirstOrDefault&lt;T&gt;</code>
+                <span>Første række, eller <code>null</code> hvis ingen</span>
+            </li>
+            <li>
+                <code>Execute</code> / <code>ExecuteAsync</code>
+                <span><code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> (antal påvirkede rækker)</span>
+            </li>
+        </ul>
+    </section>
+
+    <section class="learn__section learn__section--next">
+        <h2>Næste skridt</h2>
+        <p>
+            Når I skal bygge videre: opret en model, skriv SQL’en (gerne i pgweb),
+            og lad Dapper mappe resultatet i Blazor.
+        </p>
+        <p class="learn__next-links">
+            <a href="weather">Se vejr-demoen</a>
+            <span aria-hidden="true"> · </span>
+            <a href="counter">Åbn Counter</a>
+            <span aria-hidden="true"> · </span>
+            <a href="/">Til forsiden</a>
+        </p>
+    </section>
+</article>
+
+@code {
+    private const string SqlSelect =
+        """
+        SELECT id, navn, hold
+        FROM elever
+        WHERE hold = 'H1';
+        """;
+
+    private const string CsharpModel =
+        """
+        public class Elev
+        {
+            public int Id { get; set; }
+            public string Navn { get; set; }
+            public string Hold { get; set; }
+        }
+        """;
+
+    private const string DapperQuery =
+        """
+        using var connection = new NpgsqlConnection(connectionString);
+
+        var elever = await connection.QueryAsync<Elev>(
+            @"SELECT id, navn, hold
+              FROM elever
+              WHERE hold = @Hold",
+            new { Hold = "H1" });
+        """;
+
+    private const string BadSql =
+        """
+        // Forkert — SQL injection-risiko
+        var sql = "SELECT * FROM elever WHERE navn = '" + brugerInput + "'";
+        """;
+
+    private const string GoodSql =
+        """
+        // Korrekt — parameteriseret
+        connection.Query<Elev>(
+            "SELECT * FROM elever WHERE navn = @Navn",
+            new { Navn = brugerInput });
+        """;
+
+    private const string AdvancedSql =
+        """
+        var statistik = await connection.QueryAsync<HoldStat>(
+            @"SELECT e.hold,
+                     COUNT(*) AS antal,
+                     AVG(a.score)::int AS gns_score
+              FROM elever e
+              INNER JOIN afleveringer a ON a.elev_id = e.id
+              WHERE a.afleveret_dato >= @Fra
+              GROUP BY e.hold
+              HAVING COUNT(*) > 5
+              ORDER BY gns_score DESC",
+            new { Fra = new DateOnly(2026, 1, 1) });
+        """;
+}
