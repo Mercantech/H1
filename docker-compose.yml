@@ -1,9 +1,6 @@
 # Dokploy: docker compose up -d --build
-#
-# Routing:
-#   Cloudflare *.mercantec.tech → tunnel → Traefik
-#   Host(`h1.mercantec.tech`) → web:8080
-#   Host(`h1-db.mercantec.tech`) → pgweb:8081 (valgfri admin)
+# Alle services på dokploy-network (undgår ekstra bridge-subnet pr. stack).
+# Kun services med Traefik-labels eksponeres offentligt.
 services:
   postgres:
     image: postgres:17-alpine
@@ -15,7 +12,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
-      - internal
+      - dokploy-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-h1} -d ${POSTGRES_DB:-h1db}"]
       interval: 10s
@@ -35,7 +32,6 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - internal
       - dokploy-network
     labels:
       - traefik.enable=true
@@ -65,7 +61,6 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - internal
       - dokploy-network
     labels:
       - traefik.enable=true
@@ -84,8 +79,6 @@ services:
 networks:
   dokploy-network:
     external: true
-  internal:
-    driver: bridge
 
 volumes:
   postgres-data:
