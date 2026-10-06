@@ -8,6 +8,6 @@ services:
       - "${LOCAL_PGWEB_PORT:-8081}:8081"
 
 networks:
-  dokploy-network:
-    external: false
+  default:
     name: h1-local
+    external: false
